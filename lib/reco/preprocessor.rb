@@ -20,7 +20,7 @@ class Reco::Preprocessor
   end
   
   def record(line)
-    @output += @level.times.collect { ' ' }.join
+    @output += @level.times.collect { "  " }.join
     @output += "#{line}\n"
   end
   
@@ -39,6 +39,24 @@ class Reco::Preprocessor
       else
         record code
       end
+    end
+  end
+  
+  def indent(capture)
+    @level += 1
+    if capture
+      record "__capture #{capture}"
+      @captures.unshift @level
+      indent
+    end
+  end
+  
+  def dedent
+    @level -= 1
+    raise "unexpected dedent" if @level < 0
+    if @captures[0] == @level
+      @captures.shift
+      dedent
     end
   end
   
