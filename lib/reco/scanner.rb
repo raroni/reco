@@ -27,7 +27,7 @@ class Reco::Scanner
     
     if @scanner.eos?
       @done = true
-      yield @mode == :data ? ["print_string", flush] : ["fail", "unexpected end of template"]
+      callback.call @mode == :data ? ["print_string", flush] : ["fail", "unexpected end of template"]
     else
       advance
       @mode == :data ? scan_data(callback) : scan_code(callback)
