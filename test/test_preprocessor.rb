@@ -9,6 +9,10 @@ class PreprocessorTest < Reco::TestCase
     assert_equal fixture('projects.coffee'), preprocess(fixture('projects.eco'))
   end
   
+  def test_preprocessing_helpers_eco_fixture
+    assert_equal fixture('helpers.coffee'), preprocess(fixture('helpers.eco'))
+  end
+  
   private
   def preprocess(source)
     Reco::Preprocessor.preprocess source

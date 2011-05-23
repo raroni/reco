@@ -42,7 +42,7 @@ class Reco::Preprocessor
     end
   end
   
-  def indent(capture)
+  def indent(capture = nil)
     @level += 1
     if capture
       record "__capture #{capture}"
