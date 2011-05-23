@@ -59,7 +59,7 @@ class Reco::Scanner
   def scan_code(callback)
     if @tail == "\n"
       callback.call ["fail", "unexpected newline in code block"]
-    elsif @tail
+    elsif !@tail.empty?
       @mode = :data
       code = flush.strip
       code += " #{@arrow}" if @arrow

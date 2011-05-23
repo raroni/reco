@@ -79,5 +79,18 @@ class ScannerTest < Test::Unit::TestCase
     assert_equal ["beginCode", print: true, safe: false], tokens.shift
     assert_equal ["recordCode", "'<%%'"], tokens.shift  
   end
-
+  
+  def test_unexpected_new_in_clock
+    tokens = scan "foo\nhello <% do 'thing'\n %>"
+    assert_equal ["printString", "foo\nhello "], tokens.shift
+    assert_equal ["beginCode", print: false, safe: false], tokens.shift
+    assert_equal ["fail", "unexpected newline in code block"], tokens.shift
+  end
+  
+  def test_unexpected_end_of_template
+    tokens = scan "foo\nhello <% do 'thing'"
+    assert_equal ["printString", "foo\nhello "], tokens.shift
+    assert_equal ["beginCode", print: false, safe: false], tokens.shift
+    assert_equal ["fail", "unexpected end of template"], tokens.shift
+  end
 end
