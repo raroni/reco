@@ -13,6 +13,12 @@ class PreprocessorTest < Reco::TestCase
     assert_equal fixture('helpers.coffee'), preprocess(fixture('helpers.eco'))
   end
   
+  def test_unexpected_dedent
+    assert_raises RuntimeError do
+      preprocess fixture('invalid_dedentation.eco')
+    end
+  end
+  
   private
   def preprocess(source)
     Reco::Preprocessor.preprocess source

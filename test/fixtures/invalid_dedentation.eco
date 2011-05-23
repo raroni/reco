@@ -1,0 +1,4 @@
+<% if item = @items?[0]: %>
+  <%= item.price %>
+  <% end %>
+<% end %>
