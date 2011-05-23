@@ -5,7 +5,7 @@ class PreprocessorTest < Reco::TestCase
     assert_equal fixture('hello.coffee'), Reco::Preprocessor.preprocess(fixture('hello.eco'))
   end
   
-  def test_preprocessing_proejcts_eco_fixture
+  def test_preprocessing_projects_eco_fixture
     assert_equal fixture('projects.coffee'), Reco::Preprocessor.preprocess(fixture('projects.eco'))
   end
   
