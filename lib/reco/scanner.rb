@@ -4,7 +4,8 @@ class Reco::Scanner
   MODE_PATTERNS = {
     data: /(.*?)(<%%|<%(([=-])?)|\n|$)/,
     code: /(.*?)(((:|(->|=>))\s*)?%>|\n|$)/
-  }  
+  }
+  DEDENTABLE_PATTERN = /^(end|when|else|catch|finally)(?:\W|$)/
   
   def self.scan(source)
     tokens = []
@@ -24,7 +25,7 @@ class Reco::Scanner
   def scan(&block)
     if @scanner.eos?
       @done = true
-      yield @mode == 'data' ? ["printString", flush] : ["fail", "unexpected end of template"]
+      yield @mode == :data ? ["printString", flush] : ["fail", "unexpected end of template"]
     else
       advance
       @mode == :data ? scan_data(block) : scan_code(block)
@@ -51,7 +52,21 @@ class Reco::Scanner
   end
   
   def scan_code(block)
-    
+    if @tail == "\n"
+      block.call ["fail", "unexpected newline in code block"]
+    elsif @tail
+      @mode = :data
+      code = flush.strip
+      code += " #{@arrow}" if @arrow
+      
+      block.call ["dedent"] if is_dedentable?(code)
+      block.call ["recordCode", code]
+      block.call ["indent", @arrow] if @directive
+    end
+  end
+  
+  def is_dedentable?(code)
+    code.match DEDENTABLE_PATTERN
   end
   
   def flush
