@@ -27,7 +27,7 @@ class Reco::Scanner
     
     if @scanner.eos?
       @done = true
-      yield @mode == :data ? ["printString", flush] : ["fail", "unexpected end of template"]
+      yield @mode == :data ? ["print_string", flush] : ["fail", "unexpected end of template"]
     else
       advance
       @mode == :data ? scan_data(callback) : scan_code(callback)
@@ -51,8 +51,8 @@ class Reco::Scanner
       scan callback
     elsif @tail
       @mode = :code
-      callback.call ["printString", flush]
-      callback.call ["beginCode", print: !!@directive, safe: @directive == '-']
+      callback.call ["print_string", flush]
+      callback.call ["begin_code", print: !!@directive, safe: @directive == '-']
     end
   end
   
@@ -65,7 +65,7 @@ class Reco::Scanner
       code += " #{@arrow}" if @arrow
       
       callback.call ["dedent"] if is_dedentable?(code)
-      callback.call ["recordCode", code]
+      callback.call ["record_code", code]
       callback.call ["indent", @arrow] if @directive
     end
   end
