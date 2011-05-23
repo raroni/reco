@@ -22,13 +22,15 @@ class Reco::Scanner
     @done = false
   end
   
-  def scan(&block)
+  def scan(callback = nil, &block)
+    callback ||= block
+    
     if @scanner.eos?
       @done = true
       yield @mode == :data ? ["printString", flush] : ["fail", "unexpected end of template"]
     else
       advance
-      @mode == :data ? scan_data(block) : scan_code(block)
+      @mode == :data ? scan_data(callback) : scan_code(callback)
     end
   end
   
@@ -40,28 +42,31 @@ class Reco::Scanner
     @arrow = @scanner[5]
   end
   
-  def scan_data(block)
-    if @tail == "\n"
+  def scan_data(callback)
+    if @tail == "<%%"
+      @buffer += "<%"
+      scan callback
+    elsif @tail == "\n"
       @buffer += @tail
-      scan block
+      scan callback
     elsif @tail
       @mode = :code
-      block.call ["printString", flush]
-      block.call ["beginCode", print: !!@directive, safe: @directive == '-']
+      callback.call ["printString", flush]
+      callback.call ["beginCode", print: !!@directive, safe: @directive == '-']
     end
   end
   
-  def scan_code(block)
+  def scan_code(callback)
     if @tail == "\n"
-      block.call ["fail", "unexpected newline in code block"]
+      callback.call ["fail", "unexpected newline in code block"]
     elsif @tail
       @mode = :data
       code = flush.strip
       code += " #{@arrow}" if @arrow
       
-      block.call ["dedent"] if is_dedentable?(code)
-      block.call ["recordCode", code]
-      block.call ["indent", @arrow] if @directive
+      callback.call ["dedent"] if is_dedentable?(code)
+      callback.call ["recordCode", code]
+      callback.call ["indent", @arrow] if @directive
     end
   end
   
