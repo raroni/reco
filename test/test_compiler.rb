@@ -23,5 +23,15 @@ class CompilerTest < Reco::TestCase
     output = Reco.compile fixture("hello.eco")
     assert output.match /^module\.exports =/
   end
+  
+  def test_identifier_can_be_changed
+    output = Reco.compile fixture("hello.eco"), identifier: 'rasmus'
+    assert output.match /^var scoobydoo =/
+  end
+  
+  def test_identifiers_with_dot_omit_var_keyword
+    output = Reco.compile fixture("hello.eco"), identifier: "window.rasmus"
+    assert output.match /^window\.cowabunga =/
+  end
 
 end

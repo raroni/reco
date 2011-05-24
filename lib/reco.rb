@@ -5,7 +5,7 @@ module Reco
   autoload :Scanner, "reco/scanner"
   autoload :Preprocessor, "reco/preprocessor"
   
-  def self.compile(source)
-    Compiler.compile source
+  def self.compile(source, options = {})
+    Compiler.compile source, options
   end
 end
