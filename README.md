@@ -13,7 +13,7 @@ With Rails 3.1 you can serve Eco templates i.e. like this:
     window.templates = {};
     <% for template_name in [:user, :post] do %>
       <% template_path = File.join Rails.root, 'app', 'assets', 'templates', "#{template_name}.eco" %>
-      <%= Reco.compile File.read(template_path), :identifier => "window.templates.#{template_name}" %>
+      <%= Reco.compile File.read(template_path), identifier: "window.templates.#{template_name}" %>
     <% end %>
 
 Javascript that are run after templates.js.erb will now be able to do this:
