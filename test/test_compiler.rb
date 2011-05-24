@@ -14,7 +14,7 @@ class CompilerTest < Reco::TestCase
   end
   
   def test_parse_error_throws_exception
-    assert_raises Reco::Preprocessor::Error do
+    assert_raise Reco::Preprocessor::Error do
       Reco.compile '<% unclosed tag'
     end
   end
