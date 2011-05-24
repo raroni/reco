@@ -14,5 +14,6 @@ module Reco
     def self.wrapper
       File.read File.join(File.dirname(__FILE__), 'wrapper.js')
     end
+    
   end
 end

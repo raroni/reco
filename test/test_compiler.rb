@@ -12,5 +12,11 @@ class CompilerTest < Reco::TestCase
   def test_compiling_hello_eco_fixture
     assert Reco.compile fixture("helpers.eco")
   end
+  
+  def test_parse_error_throws_exception
+    assert_raises Reco::Preprocessor::Error do
+      Reco.compile '<% unclosed tag'
+    end
+  end
 
 end
