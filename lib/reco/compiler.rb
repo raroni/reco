@@ -6,9 +6,12 @@ module Reco
       Preprocessor.preprocess source
     end
   
-    def self.compile(source)
-      javascript = CoffeeScript.compile preprocess(source)
-      wrapper % { compiled_javascript: javascript }
+    def self.compile(source, options = {})
+      compiled_javascript = CoffeeScript.compile preprocess(source), noWrap: true
+      identifier = options[:identifier] || 'module.exports'
+      identifier = "var #{identifier}" unless identifier.include? '.'
+      
+      wrapper % { compiled_javascript: compiled_javascript, identifier: identifier }
     end
   
     def self.wrapper

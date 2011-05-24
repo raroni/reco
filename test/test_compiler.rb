@@ -18,5 +18,10 @@ class CompilerTest < Reco::TestCase
       Reco.compile '<% unclosed tag'
     end
   end
+  
+  def test_identifier_defaults_to_module_exports
+    output = Reco.compile fixture("hello.eco")
+    assert output.match /^module\.exports =/
+  end
 
 end
