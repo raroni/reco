@@ -1,0 +1,7 @@
+<ul>
+<% @getItems (items) -> %>
+  <% for item in items: %>
+  <li><%= item.name %></li>
+  <% end %>
+<% end %>
+</ul>
