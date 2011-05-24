@@ -1,5 +1,5 @@
 module Reco
-  VERSION = '0.1.0'
+  VERSION = '0.1.1'
   
   autoload :Compiler, "reco/compiler"
   autoload :Scanner, "reco/scanner"
