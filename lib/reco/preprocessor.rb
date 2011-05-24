@@ -53,11 +53,17 @@ class Reco::Preprocessor
   
   def dedent
     @level -= 1
-    raise "unexpected dedent" if @level < 0
+    fail "unexpected dedent" if @level < 0
     if @captures[0] == @level
       @captures.shift
       dedent
     end
   end
+  
+  def fail(message)
+    raise Error, message
+  end
+  
+  class Error < Exception; end
   
 end
