@@ -9,7 +9,7 @@ Reco let you compile Eco templates into Javascript through Ruby like this:
 
 With Rails 3.1 you can serve Eco templates i.e. like this:
 
-    // app/assets/templates.js.erb
+    // app/assets/javascripts/templates.js.erb
     window.templates = {};
     <% for template_name in [:user, :post] do %>
       <% template_path = File.join Rails.root, 'app', 'assets', 'templates', "#{template_name}.eco" %>
