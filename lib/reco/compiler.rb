@@ -7,15 +7,15 @@ module Reco
     end
   
     def self.compile(source, options = {})
-      compiled_javascript = CoffeeScript.compile preprocess(source), noWrap: true
+      compiled_javascript = CoffeeScript.compile preprocess(source), :noWrap => true
       identifier = options[:identifier] || 'module.exports'
       identifier = "var #{identifier}" unless identifier.include? '.'
       
-      wrapper % { compiled_javascript: compiled_javascript, identifier: identifier }
+      wrapper % [identifier, compiled_javascript]
     end
   
     def self.wrapper
-      File.read File.join(File.dirname(__FILE__), 'wrapper.js')
+      @wrapper ||= File.read File.join(File.dirname(__FILE__), 'wrapper.js')
     end
     
   end

@@ -7,4 +7,9 @@ class Reco::TestCase < Test::Unit::TestCase
   def fixture(path)
     File.read File.join(FIXTURE_ROOT, path)
   end
+  
+  def test_nothing
+    # to make warning go away
+    true
+  end
 end
