@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "reco"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
   s.summary = "Ruby port of the Eco template compiler."
   s.description = "Reco let you compile Eco templates into Javascript through Ruby."
 
