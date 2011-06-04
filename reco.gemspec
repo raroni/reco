@@ -7,6 +7,9 @@ Gem::Specification.new do |s|
   s.files = Dir["README.md", "LICENSE", "lib/**/*.rb", "lib/reco/wrapper.js"]
 
   s.add_dependency "coffee-script", "~> 2.0"
+  
+  s.add_development_dependency "rake"
+  
   s.homepage = 'https://github.com/rasmusrn/reco'
   s.authors = ["Rasmus Rønn Nielsen"]
   s.email = "rasmusrnielsen@gmail.com"
