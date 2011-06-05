@@ -2,8 +2,9 @@ require 'strscan'
 
 class Reco::Scanner
   MODE_PATTERNS = {
-    :data => /(.*?)(<%%|<%(([=-])?)|\n|$)/,
-    :code => /(.*?)(((:|(->|=>))\s*)?%>|\n|$)/
+    :data => /(.*?)(<%%|<%\s*(\#)|<%(([=-])?)|\n|$)/,
+    :code => /(.*?)((((:|(->|=>))\s*))?%>|\n|$)/,
+    :comment => /(.*?)(%>|\n|$)/
   }
   DEDENTABLE_PATTERN = /^(end|when|else|catch|finally)(?:\W|$)/
   
@@ -30,7 +31,15 @@ class Reco::Scanner
       callback.call @mode == :data ? ["print_string", flush] : ["fail", "unexpected end of template"]
     else
       advance
-      @mode == :data ? scan_data(callback) : scan_code(callback)
+      
+      case @mode
+      when :data
+        scan_data callback
+      when :code
+        scan_code callback
+      when :comment
+        scan_comment callback
+      end
     end
   end
   
@@ -38,8 +47,9 @@ class Reco::Scanner
     @scanner.scan_until MODE_PATTERNS[@mode]
     @buffer += @scanner[1]
     @tail = @scanner[2]
-    @directive = @scanner[4]
-    @arrow = @scanner[5]
+    @comment = @scanner[3]
+    @directive = @scanner[5]
+    @arrow = @scanner[6]
   end
   
   def scan_data(callback)
@@ -50,9 +60,14 @@ class Reco::Scanner
       @buffer += @tail
       scan callback
     elsif @tail
-      @mode = :code
       callback.call ["print_string", flush]
-      callback.call ["begin_code", {:print => !!@directive, :safe => @directive == '-'}]
+      
+      if @comment
+        @mode = :comment
+      else
+        @mode = :code
+        callback.call ["begin_code", {:print => !!@directive, :safe => @directive == '-'}]
+      end
     end
   end
   
@@ -67,6 +82,15 @@ class Reco::Scanner
       callback.call ["dedent"] if is_dedentable?(code)
       callback.call ["record_code", code]
       callback.call ["indent", @arrow] if @directive
+    end
+  end
+  
+  def scan_comment(callback)
+    if @tail == "\n"
+      callback.call ['fail', 'unexpected newline in code block']
+    elsif @tail
+      @mode = :data
+      @buffer = ''
     end
   end
   

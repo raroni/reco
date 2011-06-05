@@ -93,4 +93,17 @@ class ScannerTest < Reco::TestCase
     assert_equal ["begin_code", { :print => false, :safe => false }], tokens.shift
     assert_equal ["fail", "unexpected end of template"], tokens.shift
   end
+  
+  def test_comments_are_ignored
+    tokens = scan "foo\n<%# bar %>\nbaz"
+    assert_equal ["print_string", "foo\n"], tokens.shift
+    assert_equal ["print_string", "\nbaz"], tokens.shift
+  end
+
+  def test_a_comment_can_end_with_a_colon
+    tokens = scan "foo\n<% # This is a comment: %>\nbar"
+    assert_equal ["print_string", "foo\n"], tokens.shift
+    assert_equal ["print_string", "\nbar"], tokens.shift
+  end
+  
 end
