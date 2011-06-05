@@ -2,8 +2,8 @@ require 'strscan'
 
 class Reco::Scanner
   MODE_PATTERNS = {
-    data: /(.*?)(<%%|<%(([=-])?)|\n|$)/,
-    code: /(.*?)(((:|(->|=>))\s*)?%>|\n|$)/
+    :data => /(.*?)(<%%|<%(([=-])?)|\n|$)/,
+    :code => /(.*?)(((:|(->|=>))\s*)?%>|\n|$)/
   }
   DEDENTABLE_PATTERN = /^(end|when|else|catch|finally)(?:\W|$)/
   
@@ -52,7 +52,7 @@ class Reco::Scanner
     elsif @tail
       @mode = :code
       callback.call ["print_string", flush]
-      callback.call ["begin_code", print: !!@directive, safe: @directive == '-']
+      callback.call ["begin_code", {:print => !!@directive, :safe => @directive == '-'}]
     end
   end
   
